@@ -1,0 +1,34 @@
+---
+kind: pipeline
+type: docker
+name: Building..
+node:
+  drone: ch1
+steps:
+- name: build & push
+  image: plugins/docker
+  settings:
+    repo: smartinfrasolutions/unimus-core
+    tags: [ "latest" ]
+    username: smartinfrasolutions
+    password:
+      from_secret: dockerhub_token
+- name: notification
+  image: plugins/webhook
+  settings:
+    urls:
+      from_secret: webhookgotify
+    content_type: application/json
+    template: |
+      {
+       "message": "{{ repo.owner }} as updated {{ repo.name }} with {{ build.status }}.",
+       "priority": 4,
+       "title": "{{ repo.name }} build"
+      }
+  when:
+    status: [success, failure]
+---
+kind: signature
+hmac: 7a80101abc15178f87da58cf3ec066965157b2f81e1774816e1352bf3a223d16
+
+...
