@@ -2,6 +2,9 @@
 kind: pipeline
 type: docker
 name: Building..
+platform:
+  os: linux
+  arch: arm
 node:
   drone: ch1
 steps:
@@ -29,6 +32,6 @@ steps:
     status: [success, failure]
 ---
 kind: signature
-hmac: 7a80101abc15178f87da58cf3ec066965157b2f81e1774816e1352bf3a223d16
+hmac: 95c78be552726ce0076a70c639a20d2710284f60aed9406cbb8062a4ebcd8d2a
 
 ...
