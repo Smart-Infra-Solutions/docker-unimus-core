@@ -12,7 +12,7 @@ steps:
   image: alpine:latest
   commands:
     - apk add --no-cache wget
-    - wget -O /files https://download.unimus.net/unimus-core/-%20Latest/Unimus-Core.jar  
+    - wget -O files/ https://download.unimus.net/unimus-core/-%20Latest/Unimus-Core.jar  
 - name: build & push
   image: plugins/docker
   settings:
