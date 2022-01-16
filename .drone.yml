@@ -8,11 +8,6 @@ platform:
 node:
   drone: ch1
 steps:
-- name: download latest Unimus-core
-  image: alpine:latest
-  commands:
-    - apk add --no-cache wget
-    - wget -O /drone/src/files/Unimus-Core.jar https://download.unimus.net/unimus-core/-%20Latest/Unimus-Core.jar  
 - name: build & push
   image: plugins/docker
   settings:
@@ -37,6 +32,6 @@ steps:
     status: [success, failure]
 ---
 kind: signature
-hmac: 081ac65602c72c22928e794b579e75c18a334cdd9b696d720b61566d9b9bc67e
+hmac: 95c78be552726ce0076a70c639a20d2710284f60aed9406cbb8062a4ebcd8d2a
 
 ...
