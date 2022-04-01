@@ -4,7 +4,7 @@ type: docker
 name: Building..
 platform:
   os: linux
-  arch: armv8
+  arch: arm64
 node:
   drone: bzk
 steps:
@@ -37,6 +37,6 @@ steps:
     status: [success, failure]
 ---
 kind: signature
-hmac: 08ca9b245fb16ad8304a1596452a79af89f1db27bdadd33a4055e42818d5428e
+hmac: b2c384388202ac842dbe8fa367b42fcfc16321eb06176e6be87a23e7eace8585
 
 ...
