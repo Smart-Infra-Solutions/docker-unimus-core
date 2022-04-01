@@ -4,9 +4,9 @@ type: docker
 name: Building..
 platform:
   os: linux
-  arch: arm
+  arch: armv8
 node:
-  drone: ch1
+  drone: bzk
 steps:
 - name: download latest Unimus-core
   image: alpine:latest
@@ -37,6 +37,6 @@ steps:
     status: [success, failure]
 ---
 kind: signature
-hmac: f5a184549a62f82ab9bcb0ad165740ad681c869b9d9a1e12670abd16fdbeba09
+hmac: 08ca9b245fb16ad8304a1596452a79af89f1db27bdadd33a4055e42818d5428e
 
 ...
