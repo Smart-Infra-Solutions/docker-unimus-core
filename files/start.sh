@@ -1,7 +1,6 @@
 #!/bin/bash
-java -jar apm-agent-attach-cli.jar \
-    --include-main Unimus Unimus-Core.jar \
-    --include-vmarg elastic.apm.attach=true \
-    --continuous \
-    --config service_name=unimus-core \
-    --config server_url=http://10.114.16.8:8200
+java -javaagent:apm-agent-java.jar \
+-Delastic.apm.service_name=Unimus \
+-Delastic.apm.application_packages=unimus.si.solutions \
+-Delastic.apm.server_url=http://10.114.16.8:8200 \
+-jar Unimus-Core.jar
