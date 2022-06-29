@@ -1,6 +1,6 @@
 #!/bin/bash
 java -jar apm-agent-attach-cli.jar \
-    --include-main Unimus-Core.jar \
+    --include-main Unimus Unimus-Core.jar \
     --include-vmarg elastic.apm.attach=true \
     --continuous \
     --config service_name=unimus-core \
