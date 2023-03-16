@@ -4,12 +4,12 @@ FROM alpine:3.17
 ENV DOWNLOAD_URL https://download.unimus.net/unimus-core/-%20Latest/Unimus-Core.jar
 
 # Update & install
-RUN apk update \
-    && apk add --no-cache less curl wget tzdata openjdk11-jre-headless \
+RUN apk update && \
+    apk add --no-cache less curl tini wget tzdata openjdk11-jre-headless && \
 # Unimus binary download
-    && curl -L -o /opt/unimus-core.jar $DOWNLOAD_URL \
+    curl -L -o /opt/unimus-core.jar $DOWNLOAD_URL && \
 # Remove apk cache
-    && rm -rf /var/cache/apk/*
+    rm -rf /var/cache/apk/*
 
 # Copy all files (start.sh) into the container image
 COPY files/* /opt/
@@ -18,4 +18,5 @@ COPY files/* /opt/
 RUN chmod +x /opt/start.sh
 
 # Entrypoint
-ENTRYPOINT ["/opt/start.sh"]
+ENTRYPOINT ["/sbin/tini", "--"]
+CMD ["/opt/start.sh"]
