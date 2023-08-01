@@ -1,6 +1,6 @@
 # Docker-unimus-core
 
-[![Build Status](https://drone.si.solutions/api/badges/SmartInfraSolutions/docker-unimus-core/status.svg)](https://drone.si.solutions/SmartInfraSolutions/docker-unimus-core)
+[![Build Status](https://drone.si.solutions/api/badges/Smart-Infra-Solutions/docker-unimus-core/status.svg)](https://drone.si.solutions/Smart-Infra-Solutions/docker-unimus-core)
 
 **Unimus core** container, should be run with [Docker-Unimus](https://hub.docker.com/r/smartinfrasolutions/unimus)
 
