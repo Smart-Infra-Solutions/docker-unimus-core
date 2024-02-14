@@ -1,11 +1,11 @@
-FROM debian:11-slim
+FROM debian:12.5-slim
 
 # Set Unimus lated download url
 ENV DOWNLOAD_URL https://download.unimus.net/unimus-core/-%20Latest/Unimus-Core.jar
 
 # Update & install
 RUN apt-get update && \
-    apt-get install -y curl tini less wget tzdata openjdk-11-jre-headless && \
+    apt-get install -y curl tini less wget tzdata openjdk-17-jre-headless && \
     apt-get clean && \
     apt-get autoremove --yes && \
 # Unimus binary download

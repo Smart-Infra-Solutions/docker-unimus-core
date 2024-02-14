@@ -14,10 +14,10 @@ Check the [docker-compose](https://github.com/Smart-Infra-Solutions/docker-unimu
 
 ## Versions
 
-Alpine 3.17  
-Debian 11.6 slim  
+Alpine 3.19   
+Debian 12.5-slim  
 
-Unimus 2.3.2
+Unimus 2.4.1
 
 ## Supported architectures
 
