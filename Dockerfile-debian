@@ -1,7 +1,7 @@
 FROM debian:stable-slim
 
 # Set Unimus lated download url
-ENV DOWNLOAD_URL https://download.unimus.net/unimus-core/-%20Latest/Unimus-Core.jar
+ENV DOWNLOAD_URL=https://download.unimus.net/unimus-core/-%20Latest/Unimus-Core.jar
 
 # Update & install
 RUN apt-get update && \
