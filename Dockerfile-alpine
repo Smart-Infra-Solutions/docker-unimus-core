@@ -5,7 +5,7 @@ ENV DOWNLOAD_URL=https://download.unimus.net/unimus-core/-%20Latest/Unimus-Core.
 
 # Update & install
 RUN apk update && \
-    apk add --no-cache less curl tini wget tzdata openjdk25-jre-headless && \
+    apk add --no-cache less curl tini wget tzdata openjdk21-jre-headless && \
 # Unimus binary download
     curl -L -o /opt/unimus-core.jar $DOWNLOAD_URL && \
 # Remove apk cache
