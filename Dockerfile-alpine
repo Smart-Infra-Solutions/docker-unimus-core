@@ -1,11 +1,11 @@
-FROM alpine:3
+FROM azul/zulu-openjdk-alpine:25-latest
 
 # Set Unimus lated download url
 ENV DOWNLOAD_URL=https://download.unimus.net/unimus-core/-%20Latest/Unimus-Core.jar
 
 # Update & install
 RUN apk update && \
-    apk add --no-cache less curl tini wget tzdata openjdk21-jre-headless && \
+    apk add --no-cache less curl tini wget tzdata && \
 # Unimus binary download
     curl -L -o /opt/unimus-core.jar $DOWNLOAD_URL && \
 # Remove apk cache
