@@ -1,20 +1,28 @@
-FROM azul/zulu-openjdk-alpine:25-latest
+# Stage 1: Download Unimus Core binary
+FROM alpine:latest AS downloader
 
 # Set Unimus latest download url
 ENV DOWNLOAD_URL=https://download.unimus.net/unimus-core/-%20Latest/Unimus-Core.jar
 
-# Update & install
+# Download Unimus Core JAR
+RUN apk add --no-cache curl && \
+    curl -L -o /tmp/unimus-core.jar $DOWNLOAD_URL
+
+# Stage 2: Final runtime image
+FROM azul/zulu-openjdk-alpine:25-latest
+
+# Install runtime dependencies only
 RUN apk update && \
-    apk add --no-cache less curl tini wget tzdata && \
-# Unimus binary download
-    curl -L -o /opt/unimus-core.jar $DOWNLOAD_URL && \
-# Remove apk cache
+    apk add --no-cache less tini tzdata procps && \
     rm -rf /var/cache/apk/*
 
-# Copy all files (start.sh) into the container image
-COPY files/* /opt/
+# Copy Unimus Core binary from downloader stage
+COPY --from=downloader /tmp/unimus-core.jar /opt/unimus-core.jar
 
-# add script permission
+# Copy start script
+COPY files/start.sh /opt/start.sh
+
+# Set script permissions
 RUN chmod +x /opt/start.sh
 
 # Health check
