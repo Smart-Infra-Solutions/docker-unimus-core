@@ -66,13 +66,6 @@ steps:
     when:
       - event: [pull_request, push, tag]
 
-  - name: security-scan
-    image: aquasec/trivy:latest
-    commands:
-      - trivy image --severity HIGH,CRITICAL --exit-code 0 unimus-core:test-debian
-    when:
-      - event: [pull_request, push, tag]
-
   - name: build-unimus-debian-dev
     image: *buildx_plugin
     settings:
