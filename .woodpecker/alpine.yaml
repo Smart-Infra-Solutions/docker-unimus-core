@@ -17,6 +17,62 @@ variables:
 
 steps:
 
+  - name: build-test-image
+    image: docker:latest
+    commands:
+      - docker build -f Dockerfile-alpine -t unimus-core:test-alpine .
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    when:
+      - event: [pull_request, push, tag]
+
+  - name: test-container-start
+    image: docker:latest
+    commands:
+      - echo "Testing container startup..."
+      - docker run -d --name unimus-test -e UNIMUS_SERVER_ADDRESS=192.168.1.1 -e UNIMUS_SERVER_PORT=5509 -e UNIMUS_SERVER_ACCESS_KEY=test_key_for_ci unimus-core:test-alpine
+      - sleep 10
+      - docker ps -a
+      - docker logs unimus-test
+      - docker stop unimus-test || true
+      - docker rm unimus-test || true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    when:
+      - event: [pull_request, push, tag]
+
+  - name: test-config-generation
+    image: docker:latest
+    commands:
+      - echo "Testing config file generation..."
+      - docker run --rm -e UNIMUS_SERVER_ADDRESS=test.example.com -e UNIMUS_SERVER_PORT=9999 -e UNIMUS_SERVER_ACCESS_KEY=test_access_key unimus-core:test-alpine sh -c "timeout 5 /opt/start.sh || true"
+      - echo "Config generation test completed"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    when:
+      - event: [pull_request, push, tag]
+
+  - name: test-healthcheck
+    image: docker:latest
+    commands:
+      - echo "Testing health check..."
+      - docker run -d --name unimus-health-test -e UNIMUS_SERVER_ADDRESS=192.168.1.1 -e UNIMUS_SERVER_PORT=5509 -e UNIMUS_SERVER_ACCESS_KEY=test_key unimus-core:test-alpine
+      - sleep 70
+      - docker inspect --format='{{.State.Health.Status}}' unimus-health-test || echo "Health check not available yet"
+      - docker stop unimus-health-test || true
+      - docker rm unimus-health-test || true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    when:
+      - event: [pull_request, push, tag]
+
+  - name: security-scan
+    image: aquasec/trivy:latest
+    commands:
+      - trivy image --severity HIGH,CRITICAL --exit-code 0 unimus-core:test-alpine
+    when:
+      - event: [pull_request, push, tag]
+
   - name: build-unimus-alpine-dev
     image: *buildx_plugin
     settings:

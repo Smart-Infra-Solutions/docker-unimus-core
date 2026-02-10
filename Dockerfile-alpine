@@ -1,6 +1,6 @@
 FROM azul/zulu-openjdk-alpine:25-latest
 
-# Set Unimus lated download url
+# Set Unimus latest download url
 ENV DOWNLOAD_URL=https://download.unimus.net/unimus-core/-%20Latest/Unimus-Core.jar
 
 # Update & install
@@ -16,6 +16,10 @@ COPY files/* /opt/
 
 # add script permission
 RUN chmod +x /opt/start.sh
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD pgrep -f "unimus-core.jar" || exit 1
 
 # Entrypoint
 ENTRYPOINT ["/sbin/tini", "--"]
