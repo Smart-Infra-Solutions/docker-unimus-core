@@ -3,7 +3,7 @@ version: "3"
 
 services:
   unimus-core:
-    image: Smart-Infra-Solutions/docker-unimus-core
+    image: smartinfrasolutions/unimus-core:latest-alpine
     environment:
       # unimus server address
       - UNIMUS_SERVER_ADDRESS=xxx.xxx.xxx.xxx
