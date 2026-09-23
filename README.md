@@ -1,9 +1,9 @@
 # Unimus Core in Docker
 
 [![status-badge](https://ci.si.solutions/api/badges/2/status.svg)](https://ci.si.solutions/repos/2)
-[![Docker Pulls](https://img.shields.io/docker/pulls/smartinfrasolutions/unimus-core)](https://hub.docker.com/r/smartinfrasolutions/unimus-core)
-[![Docker Image Version](https://img.shields.io/docker/v/smartinfrasolutions/unimus-core?sort=semver)](https://hub.docker.com/r/smartinfrasolutions/unimus-core/tags)
-[![Image Size](https://img.shields.io/docker/image-size/smartinfrasolutions/unimus-core/latest-alpine?label=alpine%20size)](https://hub.docker.com/r/smartinfrasolutions/unimus-core/tags)
+[![Docker Pulls](https://img.shields.io/docker/pulls/sisolutions/unimus-core)](https://hub.docker.com/r/sisolutions/unimus-core)
+[![Docker Image Version](https://img.shields.io/docker/v/sisolutions/unimus-core?sort=semver)](https://hub.docker.com/r/sisolutions/unimus-core/tags)
+[![Image Size](https://img.shields.io/docker/image-size/sisolutions/unimus-core/latest-alpine?label=alpine%20size)](https://hub.docker.com/r/sisolutions/unimus-core/tags)
 
 > **Unimus Remote Core** — a distributed worker for [Unimus](https://unimus.net/).
 > It connects back to a Unimus **Server** and performs the actual device access,
@@ -14,7 +14,7 @@ Unofficial, hardened container images for the Unimus **Remote Core**, available 
 
 > ⚠️ A Remote Core is **not** a standalone product — it must be paired with a running
 > Unimus Server. For the server, see
-> **[`smartinfrasolutions/unimus`](https://hub.docker.com/r/smartinfrasolutions/unimus)**
+> **[`sisolutions/unimus`](https://hub.docker.com/r/sisolutions/unimus)**
 > ([source](https://github.com/Smart-Infra-Solutions/docker-unimus)).
 
 ---
@@ -29,7 +29,7 @@ core port (no inbound firewall rules toward the remote network).
 ```
         ┌──────────────────────────┐                ┌────────────────────────────┐
         │  Unimus Server           │   core conn.   │  Unimus Remote Core        │
-        │  smartinfrasolutions/    │◄───────────────│  smartinfrasolutions/      │
+        │  sisolutions/            │◄───────────────│  sisolutions/              │
         │  unimus                  │  TCP :5509     │  unimus-core               │
         │  Web UI :8085            │  + access key  │  (this image)              │
         └──────────────────────────┘                └─────────────┬──────────────┘
@@ -74,7 +74,7 @@ docker run -d \
   -e XMX=1024M \
   -e TZ=Europe/Paris \
   -v unimus-core-config:/etc/unimus-core \
-  smartinfrasolutions/unimus-core:latest-alpine
+  sisolutions/unimus-core:latest-alpine
 ```
 
 ### Docker Compose
@@ -82,7 +82,7 @@ docker run -d \
 ```yaml
 services:
   unimus-core:
-    image: smartinfrasolutions/unimus-core:latest-alpine
+    image: sisolutions/unimus-core:latest-alpine
     container_name: unimus-core
     restart: unless-stopped
     environment:
@@ -141,7 +141,7 @@ writes them into `/etc/unimus-core/unimus-core.properties`.
 > 🔁 **Keep the Core version aligned with the Server version.** This repo is tagged in
 > lockstep with [`docker-unimus`](https://github.com/Smart-Infra-Solutions/docker-unimus).
 
-Browse all tags on **[Docker Hub](https://hub.docker.com/r/smartinfrasolutions/unimus-core/tags)**.
+Browse all tags on **[Docker Hub](https://hub.docker.com/r/sisolutions/unimus-core/tags)**.
 
 ---
 
@@ -191,12 +191,12 @@ docker build -f Dockerfile-debian -t unimus-core:debian .
 
 ## 🔗 Related projects & links
 
-- 🧠 **Unimus Server image** — [`smartinfrasolutions/unimus`](https://hub.docker.com/r/smartinfrasolutions/unimus)
+- 🧠 **Unimus Server image** — [`sisolutions/unimus`](https://hub.docker.com/r/sisolutions/unimus)
   · [source](https://github.com/Smart-Infra-Solutions/docker-unimus)
-- 🛰️ **This image (Remote Core)** — [`smartinfrasolutions/unimus-core`](https://hub.docker.com/r/smartinfrasolutions/unimus-core)
+- 🛰️ **This image (Remote Core)** — [`sisolutions/unimus-core`](https://hub.docker.com/r/sisolutions/unimus-core)
   · [source](https://github.com/Smart-Infra-Solutions/docker-unimus-core)
 - 📖 **Unimus** — https://unimus.net/
-- 🏢 **Docker Hub org** — https://hub.docker.com/r/smartinfrasolutions
+- 🏢 **Docker Hub org** — https://hub.docker.com/u/sisolutions
 
 ---
 
