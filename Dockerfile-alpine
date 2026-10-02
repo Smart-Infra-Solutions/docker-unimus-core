@@ -11,6 +11,9 @@ RUN apk add --no-cache curl && \
 # Stage 2: Final runtime image
 FROM azul/zulu-openjdk-alpine:25-latest
 
+# Link the image to its source repository (GitHub Container Registry)
+LABEL org.opencontainers.image.source=https://github.com/Smart-Infra-Solutions/docker-unimus-core
+
 # Install runtime dependencies only
 RUN apk update && \
     apk add --no-cache less tini tzdata procps && \

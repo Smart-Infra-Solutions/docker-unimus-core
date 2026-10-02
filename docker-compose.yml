@@ -3,7 +3,7 @@ version: "3"
 
 services:
   unimus-core:
-    image: sisolutions/unimus-core:latest-alpine
+    image: ghcr.io/smart-infra-solutions/unimus-core:latest-alpine
     environment:
       # unimus server address
       - UNIMUS_SERVER_ADDRESS=xxx.xxx.xxx.xxx

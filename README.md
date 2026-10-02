@@ -1,9 +1,8 @@
 # Unimus Core in Docker
 
 [![status-badge](https://ci.si.solutions/api/badges/2/status.svg)](https://ci.si.solutions/repos/2)
-[![Docker Pulls](https://img.shields.io/docker/pulls/sisolutions/unimus-core)](https://hub.docker.com/r/sisolutions/unimus-core)
-[![Docker Image Version](https://img.shields.io/docker/v/sisolutions/unimus-core?sort=semver)](https://hub.docker.com/r/sisolutions/unimus-core/tags)
-[![Image Size](https://img.shields.io/docker/image-size/sisolutions/unimus-core/latest-alpine?label=alpine%20size)](https://hub.docker.com/r/sisolutions/unimus-core/tags)
+[![GHCR](https://img.shields.io/badge/ghcr.io-smart--infra--solutions%2Funimus--core-blue?logo=github)](https://github.com/orgs/Smart-Infra-Solutions/packages/container/package/unimus-core)
+[![Image Version](https://img.shields.io/github/v/tag/Smart-Infra-Solutions/docker-unimus-core?sort=semver&label=version)](https://github.com/orgs/Smart-Infra-Solutions/packages/container/package/unimus-core)
 
 > **Unimus Remote Core** — a distributed worker for [Unimus](https://unimus.net/).
 > It connects back to a Unimus **Server** and performs the actual device access,
@@ -12,14 +11,14 @@
 Unofficial, hardened container images for the Unimus **Remote Core**, available in
 **Alpine** and **Debian** flavors, built for **`amd64`** and **`arm64`**.
 
-> ⚠️ A Remote Core is **not** a standalone product — it must be paired with a running
+> A Remote Core is **not** a standalone product — it must be paired with a running
 > Unimus Server. For the server, see
-> **[`sisolutions/unimus`](https://hub.docker.com/r/sisolutions/unimus)**
+> **[`ghcr.io/smart-infra-solutions/unimus`](https://github.com/orgs/Smart-Infra-Solutions/packages/container/package/unimus)**
 > ([source](https://github.com/Smart-Infra-Solutions/docker-unimus)).
 
 ---
 
-## 🧩 How it fits together
+## How it fits together
 
 A Remote Core lets you reach devices that the Server cannot reach directly — for
 example, networks behind NAT, in remote sites, or in isolated security zones. The
@@ -29,7 +28,7 @@ core port (no inbound firewall rules toward the remote network).
 ```
         ┌──────────────────────────┐                ┌────────────────────────────┐
         │  Unimus Server           │   core conn.   │  Unimus Remote Core        │
-        │  sisolutions/            │◄───────────────│  sisolutions/              │
+        │  smart-infra-solutions/  │◄───────────────│  smart-infra-solutions/    │
         │  unimus                  │  TCP :5509     │  unimus-core               │
         │  Web UI :8085            │  + access key  │  (this image)              │
         └──────────────────────────┘                └─────────────┬──────────────┘
@@ -49,21 +48,21 @@ core port (no inbound firewall rules toward the remote network).
 
 ---
 
-## ✨ Highlights
+## Highlights
 
-- 🪶 **Two flavors** — minimal **Alpine** or **Debian** (glibc).
-- 🏗️ **Multi-stage build** — the JAR is downloaded in a builder stage; the final image
+- **Two flavors** — minimal **Alpine** or **Debian** (glibc).
+- **Multi-stage build** — the JAR is downloaded in a builder stage; the final image
   ships only the runtime (no `curl`, smaller attack surface).
-- ☕ **Java 25** runtime (Azul Zulu on Alpine, OpenJDK on Debian).
-- ⚙️ **Zero-touch config** — the entrypoint generates
+- **Java 25** runtime (Azul Zulu on Alpine, OpenJDK on Debian).
+- **Zero-touch config** — the entrypoint generates
   `/etc/unimus-core/unimus-core.properties` from environment variables on startup.
-- ❤️ **Built-in HEALTHCHECK** (verifies the core process is alive).
-- 🌍 **Multi-arch** — `linux/amd64` and `linux/arm64/v8`.
-- 🛡️ **`tini`** as PID 1 for correct signal handling and zombie reaping.
+- **Built-in HEALTHCHECK** (verifies the core process is alive).
+- **Multi-arch** — `linux/amd64` and `linux/arm64/v8`.
+- **`tini`** as PID 1 for correct signal handling and zombie reaping.
 
 ---
 
-## 🚀 Quick start
+## Quick start
 
 ```bash
 docker run -d \
@@ -74,7 +73,7 @@ docker run -d \
   -e XMX=1024M \
   -e TZ=Europe/Paris \
   -v unimus-core-config:/etc/unimus-core \
-  sisolutions/unimus-core:latest-alpine
+  ghcr.io/smart-infra-solutions/unimus-core:latest-alpine
 ```
 
 ### Docker Compose
@@ -82,7 +81,7 @@ docker run -d \
 ```yaml
 services:
   unimus-core:
-    image: sisolutions/unimus-core:latest-alpine
+    image: ghcr.io/smart-infra-solutions/unimus-core:latest-alpine
     container_name: unimus-core
     restart: unless-stopped
     environment:
@@ -101,12 +100,12 @@ services:
       - /etc/localtime:/etc/localtime:ro
 ```
 
-> 💡 Want the **Server** and a **Core** in one stack? See the combined example in the
+> Want the **Server** and a **Core** in one stack? See the combined example in the
 > [`docker-unimus`](https://github.com/Smart-Infra-Solutions/docker-unimus) repo.
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 Configuration is driven entirely by environment variables. On startup the entrypoint
 writes them into `/etc/unimus-core/unimus-core.properties`.
@@ -121,15 +120,15 @@ writes them into `/etc/unimus-core/unimus-core.properties`.
 | `JAVA_OPTS`                | _(unset)_              | Full override of JVM parameters. **If set, replaces `XMS`/`XMX`.**                            |
 | `TZ`                       | `UTC`                  | Container timezone, e.g. `Europe/Paris`.                                                      |
 
-> 🔐 Treat `UNIMUS_SERVER_ACCESS_KEY` as a secret — prefer Docker/Compose secrets or an
+> Treat `UNIMUS_SERVER_ACCESS_KEY` as a secret — prefer Docker/Compose secrets or an
 > `.env` file over committing it.
 
-> 💾 **Persistence** — the generated configuration lives in `/etc/unimus-core`. Mount a
+> **Persistence** — the generated configuration lives in `/etc/unimus-core`. Mount a
 > volume there to keep it across container recreation.
 
 ---
 
-## 🏷️ Image tags
+## Image tags
 
 | Tag                    | Flavor | Description                                          |
 |------------------------|--------|------------------------------------------------------|
@@ -138,14 +137,14 @@ writes them into `/etc/unimus-core/unimus-core.properties`.
 | `X.Y.Z-alpine-linux`   | Alpine | Pinned Core version (e.g. `2.9.1-alpine-linux`).     |
 | `X.Y.Z-debian-linux`   | Debian | Pinned Core version (e.g. `2.9.1-debian-linux`).     |
 
-> 🔁 **Keep the Core version aligned with the Server version.** This repo is tagged in
+> **Keep the Core version aligned with the Server version.** This repo is tagged in
 > lockstep with [`docker-unimus`](https://github.com/Smart-Infra-Solutions/docker-unimus).
 
-Browse all tags on **[Docker Hub](https://hub.docker.com/r/sisolutions/unimus-core/tags)**.
+Browse all tags on **[GitHub Container Registry](https://github.com/orgs/Smart-Infra-Solutions/packages/container/package/unimus-core)**.
 
 ---
 
-## 🩺 Health & operations
+## Health & operations
 
 The image declares a `HEALTHCHECK` that verifies the core process is running:
 
@@ -162,7 +161,7 @@ A healthy core also appears as **connected** in the Server's Zone view.
 
 ---
 
-## 🧱 How the image is built
+## How the image is built
 
 The Dockerfiles use a two-stage build:
 
@@ -183,20 +182,20 @@ docker build -f Dockerfile-debian -t unimus-core:debian .
 
 ---
 
-## 🖥️ Supported architectures
+## Supported architectures
 
 `linux/amd64` · `linux/arm64/v8`
 
 ---
 
-## 🔗 Related projects & links
+## Related projects & links
 
-- 🧠 **Unimus Server image** — [`sisolutions/unimus`](https://hub.docker.com/r/sisolutions/unimus)
+- **Unimus Server image** — [`ghcr.io/smart-infra-solutions/unimus`](https://github.com/orgs/Smart-Infra-Solutions/packages/container/package/unimus)
   · [source](https://github.com/Smart-Infra-Solutions/docker-unimus)
-- 🛰️ **This image (Remote Core)** — [`sisolutions/unimus-core`](https://hub.docker.com/r/sisolutions/unimus-core)
+- **This image (Remote Core)** — [`ghcr.io/smart-infra-solutions/unimus-core`](https://github.com/orgs/Smart-Infra-Solutions/packages/container/package/unimus-core)
   · [source](https://github.com/Smart-Infra-Solutions/docker-unimus-core)
-- 📖 **Unimus** — https://unimus.net/
-- 🏢 **Docker Hub org** — https://hub.docker.com/u/sisolutions
+- **Unimus** — https://unimus.net/
+- **GitHub Packages** — https://github.com/orgs/Smart-Infra-Solutions/packages
 
 ---
 

@@ -9,11 +9,11 @@ variables:
   - &buildx_plugin 'woodpeckerci/plugin-docker-buildx'
   - &platforms_alpine 'linux/arm64/v8,linux/amd64'
   - publish_logins: &publish_logins
-      - registry: https://index.docker.io/v1/
-        username: fsenchet
+      - registry: https://ghcr.io
+        username: Ch1ch1
         password:
-          from_secret: docker_token
-  - &publish_repos 'sisolutions/unimus-core'
+          from_secret: ghcr_token
+  - &publish_repos 'ghcr.io/smart-infra-solutions/unimus-core'
 
 steps:
 
@@ -74,6 +74,7 @@ steps:
       platforms: *platforms_alpine
       tag: latest-alpine-dev
       logins: *publish_logins
+      auto_labels: false
     when:
       - event: [pull_request, push]
 
@@ -85,5 +86,6 @@ steps:
       platforms: *platforms_alpine
       tag: [latest-alpine, '${CI_COMMIT_TAG}-alpine-linux']
       logins: *publish_logins
+      auto_labels: false
     when:
       - event: tag

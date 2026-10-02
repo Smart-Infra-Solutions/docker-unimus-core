@@ -14,6 +14,9 @@ RUN apt-get update && \
 # Stage 2: Final runtime image
 FROM debian:stable-slim
 
+# Link the image to its source repository (GitHub Container Registry)
+LABEL org.opencontainers.image.source=https://github.com/Smart-Infra-Solutions/docker-unimus-core
+
 # Install runtime dependencies only
 RUN apt-get update && \
     apt-get install -y tini less tzdata openjdk-25-jre-headless procps && \
