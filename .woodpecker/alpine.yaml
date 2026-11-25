@@ -76,7 +76,7 @@ steps:
       logins: *publish_logins
       default_labels: false
     when:
-      - event: [pull_request, push]
+      - event: push
 
   - name: build-unimus-alpine
     image: *buildx_plugin

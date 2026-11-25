@@ -51,8 +51,8 @@ core port (no inbound firewall rules toward the remote network).
 ## Highlights
 
 - **Two flavors** — minimal **Alpine** or **Debian** (glibc).
-- **Multi-stage build** — the JAR is downloaded in a builder stage; the final image
-  ships only the runtime (no `curl`, smaller attack surface).
+- **Multi-stage build** — the JAR is downloaded and checksum-verified in a builder
+  stage; the final image ships only the runtime (no `curl`, smaller attack surface).
 - **Java 25** runtime (Azul Zulu on Alpine, OpenJDK on Debian).
 - **Zero-touch config** — the entrypoint generates
   `/etc/unimus-core/unimus-core.properties` from environment variables on startup.
@@ -166,7 +166,8 @@ A healthy core also appears as **connected** in the Server's Zone view.
 The Dockerfiles use a two-stage build:
 
 1. **Builder stage** — downloads `Unimus-Core.jar` from the official Unimus download
-   server.
+   server and verifies it against a pinned `JAR_SHA256` checksum. A mismatch aborts
+   the build.
 2. **Runtime stage** — a clean JRE image that copies only the JAR plus the entrypoint,
    runs under `tini` as PID 1.
 
@@ -179,6 +180,27 @@ docker build -f Dockerfile-alpine -t unimus-core:alpine .
 # Debian
 docker build -f Dockerfile-debian -t unimus-core:debian .
 ```
+
+The `JAR_SHA256` build arg can be overridden to build a specific verified JAR:
+
+```bash
+docker build -f Dockerfile-alpine \
+  --build-arg JAR_SHA256=<sha256> \
+  -t unimus-core:alpine .
+```
+
+### Keeping dependencies up to date
+
+- **Base images** are pinned by digest (`tag@sha256:…`). **Dependabot**
+  (`.github/dependabot.yml`) opens a weekly PR when a new digest is published,
+  and also keeps the GitHub Actions up to date.
+- **The Unimus Core JAR** is watched by the `Unimus Core JAR update` workflow
+  (`.github/workflows/unimus-core-jar-update.yml`): every Monday it downloads the
+  latest JAR and, if its checksum changed, opens a PR bumping `JAR_SHA256` in
+  both Dockerfiles. It can also be run by hand from the Actions tab.
+
+Pull requests only build and test the images; images are published to GHCR on
+pushes to `main` (`latest-*-dev`) and on tags (`latest-*`, `X.Y.Z-*`).
 
 ---
 
