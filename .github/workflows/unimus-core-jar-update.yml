@@ -1,0 +1,52 @@
+# Watches the "Latest" Unimus Core JAR and opens a PR bumping JAR_SHA256 in both
+# Dockerfiles whenever a new release is published. Dependabot cannot track it:
+# the JAR comes from a plain download URL, not from a package registry.
+name: Unimus Core JAR update
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # every Monday, 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Download the latest JAR and compare checksums
+        id: jar
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/Unimus-Core.jar" \
+            "https://download.unimus.net/unimus-core/-%20Latest/Unimus-Core.jar"
+          sha=$(sha256sum "$RUNNER_TEMP/Unimus-Core.jar" | cut -d' ' -f1)
+          version=$(unzip -p "$RUNNER_TEMP/Unimus-Core.jar" META-INF/MANIFEST.MF \
+            | sed -n 's/^Implementation-Version: *//p' | tr -d '\r')
+          current=$(sed -n 's/^ARG JAR_SHA256="\(.*\)"/\1/p' Dockerfile-alpine)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          echo "Latest Unimus Core: $version ($sha), pinned: $current"
+          if [ "$sha" != "$current" ]; then
+            sed -i "s/^ARG JAR_SHA256=\".*\"/ARG JAR_SHA256=\"$sha\"/" Dockerfile-alpine Dockerfile-debian
+          fi
+
+      - name: Open or update the pull request
+        uses: peter-evans/create-pull-request@3ffccacd46053766916f087ce41d627c0b8cf2d1 # v8.1.3
+        with:
+          branch: unimus-core-jar-update
+          delete-branch: true
+          sign-commits: true
+          commit-message: "deps: bump Unimus Core JAR to ${{ steps.jar.outputs.version }}"
+          title: "deps: bump Unimus Core JAR to ${{ steps.jar.outputs.version }}"
+          body: |
+            A new Unimus Core JAR is available on the official download server.
+
+            - Version: `${{ steps.jar.outputs.version }}`
+            - SHA-256: `${{ steps.jar.outputs.sha }}`
+
+            `JAR_SHA256` is updated in `Dockerfile-alpine` and `Dockerfile-debian`.
+            Once merged, tag the release (`${{ steps.jar.outputs.version }}`) to publish the images.

@@ -1,18 +1,27 @@
-# Stage 1: Download Unimus Core binary
-FROM debian:stable-slim AS downloader
+# Stage 1: Download and verify Unimus Core binary
+FROM debian:stable-slim@sha256:a64d9dbf633e2a2503afac76be521dc25d9b5765150b30d31a3914d4ae969cab AS downloader
 
 # Set Unimus latest download url
 ENV DOWNLOAD_URL=https://download.unimus.net/unimus-core/-%20Latest/Unimus-Core.jar
 
-# Download Unimus Core JAR
+# Optional: Set expected SHA256 checksum for JAR verification
+ARG JAR_SHA256="409963d0c68e6838a8acd770f2bae2ec280da73ea66a05cf011f456d91489fee"
+
+# Download and verify Unimus Core JAR
 RUN apt-get update && \
     apt-get install -y curl && \
     curl -L -o /tmp/unimus-core.jar $DOWNLOAD_URL && \
+    if [ ! -z "$JAR_SHA256" ]; then \
+        echo "$JAR_SHA256  /tmp/unimus-core.jar" | sha256sum -c - || { echo "Checksum verification failed!"; exit 1; }; \
+        echo "JAR checksum verified successfully"; \
+    else \
+        echo "Warning: Skipping checksum verification (JAR_SHA256 not set)"; \
+    fi && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 # Stage 2: Final runtime image
-FROM debian:stable-slim
+FROM debian:stable-slim@sha256:a64d9dbf633e2a2503afac76be521dc25d9b5765150b30d31a3914d4ae969cab
 
 # Link the image to its source repository (GitHub Container Registry)
 LABEL org.opencontainers.image.source=https://github.com/Smart-Infra-Solutions/docker-unimus-core
